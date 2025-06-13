@@ -23,7 +23,7 @@ void professor_t::flag_professor(std::shared_ptr<submission_t> __submission) {
     i++;
     std::cout << "⚠️  Plagiarism Detected: Student " << __submission->student->get_name()
               << " has plagiarized in " << __submission->codefile.substr(i)
-              << " and will be receiving an FR grade." << std::endl << std::endl;
+              << " and will be receiving an FR grade." << std::endl;
 }
 
 namespace testcase {
@@ -123,7 +123,7 @@ void testcase::execute_testcase(std::string __test_dir) {
     }
 
     in.close();
-    std::cout << std::endl << "✅ Testcase Execution Completed." << std::endl;
+// std::cout<<"\n";
 }
 
 int main(int argc, char** argv) {
@@ -132,5 +132,6 @@ int main(int argc, char** argv) {
         return 1;
     }
     testcase::execute_testcase(argv[1]);
+     std::cout << std::endl << "✅ Testcase Execution Completed." << std::endl;
     return 0;
 }
