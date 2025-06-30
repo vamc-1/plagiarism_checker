@@ -1,4 +1,3 @@
-#bash
 sudo apt update
 sudo apt install build-essential llvm-dev libclang-dev
 
