@@ -77,9 +77,9 @@ eg.(output of phase-2)
 🚩 Plagiarism (submitted later): ID=6 suspected source ID=2.
 ----------------------
 
-==========================
+
 ✅ Testcase Execution Completed.
-==========================
+----------------------
 
 -->Incase of any errors in parsing the submission.cpp files ,then the errors were noted in errorlog file
 ---------------------------------------------------------------------------------------------------------
