@@ -53,29 +53,4 @@ std::string get_cursor_kind_spelling(int kind) {
 
 #ifdef BUILD_EXECUTABLE
 
-#include <iostream>
-
-int main(int argc, char* argv[]) {
-    if (argc != 2) {
-        std::cerr << "Usage: ./tokenizer <source_file.cpp>\n";
-        return 1;
-    }
-
-    try {
-        std::string filename = argv[1];
-        tokenizer_t tokenizer(filename);
-        std::vector<int> tokens = tokenizer.get_tokens();
-
-        for (int token : tokens) {
-            std::string spelling = get_cursor_kind_spelling(token);
-            std::cout << token << " - " << spelling << "\n";
-        }
-    } catch (const std::exception& ex) {
-        std::cerr << "Error: " << ex.what() << "\n";
-        return 1;
-    }
-
-    return 0;
-}
-
-#endif
+ 
