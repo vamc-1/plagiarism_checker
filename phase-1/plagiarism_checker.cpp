@@ -63,6 +63,9 @@ std::pair<int, std::vector<std::pair<int,int>>> longestCommonSubsequenceWithPosi
 }
 // Function to find the maximum matching pattern length from a given position (i) in submission1. Also updates the positions in submission2 such that the matched things are not recounted twice.
 //std::map<int,std::set<int>>& submission2_positions , used set to track positions , since O(logn) deletion and O(logn) search for set.
+/* ──────────────────────────────────────────────────────────────
+   Pattern‑matching helper (≥10‑token exact run)
+  ────────────────────────────────────────────────────────────── */
 int find_max_string_from(std::map<int,std::set<int>>& submission2_positions,std::vector<int>& submission1,int i,int size){
     int count=0;
     std::vector<int> remover;
