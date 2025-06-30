@@ -28,10 +28,10 @@ eg.(output of phase-1)
           Match starting at submission1[296]: Length = 260
           Match starting at submission1[576]: Length = 17
           Match starting at submission1[593]: Length = 45
-plag : 1
-sum_of_all_matched_patterns : 423
-max_len : 432
-position_1 : 128
-position_2 : 77
-Fuzzy block spans  test1.cpp lines 29‑104  and  test2.cpp lines 34‑85
+          plag : 1
+          sum_of_all_matched_patterns : 423
+          max_len : 432
+          position_1 : 128
+          position_2 : 77
+          Fuzzy block spans  test1.cpp lines 29‑104  and  test2.cpp lines 34‑85
 
