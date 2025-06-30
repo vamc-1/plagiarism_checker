@@ -1,4 +1,4 @@
-sudo apt update
+sudo apt update ; and ;
 sudo apt install build-essential llvm-dev libclang-dev
 
  1. Build the tokenizer executable : 
