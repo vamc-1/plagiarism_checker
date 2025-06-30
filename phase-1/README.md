@@ -2,7 +2,6 @@ sudo apt update
 sudo apt install build-essential llvm-dev libclang-dev
 
  1. Build the tokenizer executable
-#bash
     g++ -std=c++20 t_main.cpp tokenizer.cpp $(llvm-config --cxxflags --ldflags --system-libs) -fexceptions -lclang -o tokenizer
 
 
@@ -13,11 +12,9 @@ sudo apt install build-essential llvm-dev libclang-dev
 
 ------------------------------------------------------------------------
   2.Compile the plagiarism‑engine objects
-#bash
-     g++ -std=c++20     -I/usr/lib/llvm-16/include     -L/usr/lib/llvm-16/lib     tokenizer.cpp plagiarism_checker.cpp p_main.cpp     -o plagiarism_checker     -lclang     -pthread     -Wl,-rpath,/usr/lib/llvm-16/lib
+     g++ -std=c++20     -I/usr/lib/llvm-16/include     -L/usr/lib/llvm-16/lib     tokenizer.cpp plagiarism_checker.cpp p_main.cpp     -o plagiarism_checker     -        lclang     -pthread     -Wl,-rpath,/usr/lib/llvm-16/lib
 -------------------------------------------------------------------------
    3.Run a single comparison
-#bash  
      ./plagiarism_checker 
      
 eg.(output of phase-1)
