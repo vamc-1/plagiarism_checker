@@ -335,11 +335,16 @@ if (cnt == 0) {
     double score = plagiarismScore(A, B, sum);
     int plag = (score > 0.25) ? 1 : 0;
 
-     // line‑range for the longest fuzzy block
-unsigned startLineA = A[position_1].line;
-unsigned endLineA   = A[position_1 + max_len - 1].line;
-unsigned startLineB = B[position_2].line;
-unsigned endLineB   = B[position_2 + max_len - 1].line;
+     // Check if a fuzzy block was found
+if (max_len > 0 &&
+    position_1 + max_len - 1 < A.size() &&
+    position_2 + max_len - 1 < B.size()) {
+
+    // line‑range for the longest fuzzy block
+    unsigned startLineA = A[position_1].line;
+    unsigned endLineA   = A[position_1 + max_len - 1].line;
+    unsigned startLineB = B[position_2].line;
+    unsigned endLineB   = B[position_2 + max_len - 1].line;
 
     // Match your original print format
     std::cout << "plag : " << plag << std::endl;
@@ -348,11 +353,17 @@ unsigned endLineB   = B[position_2 + max_len - 1].line;
     std::cout << "position_1 : " << position_1 << std::endl;
     std::cout << "position_2 : " << position_2 << std::endl;
 
-
     // ----- NEW Tester‑readable range -----
-          std::cout << "Fuzzy block spans "
-          << fA << " lines " << startLineA << "‑" << endLineA
-          << "  and  "
-          << fB << " lines " << startLineB << "‑" << endLineB << '\n';
+    std::cout << "Fuzzy block spans "
+              << fA << " lines " << startLineA << "‑" << endLineA
+              << "  and  "
+              << fB << " lines " << startLineB << "‑" << endLineB << '\n';
+
+} else {
+    std::cout << "No valid fuzzy block found or indices out of range.\n";
+    std::cout << "plag : " << plag << std::endl;
+    std::cout << "sum_of_all_matched_patterns : " << sum << std::endl;
+    std::cout << "max_len : 0\n";
+}
 }
 
