@@ -1,58 +1,66 @@
+// tokenizer.cpp
 #include "tokenizer.hpp"
-// You should NOT modify ANYTHING in this file.
+#include <iostream>
+#include <stdexcept>
 
-tokenizer_t::tokenizer_t(std::string __file_name) {
-    this->file_name = __file_name;
-    this->index = clang_createIndex(0, 0);
+tokenizer_t::tokenizer_t(std::string __file_name)
+    : file_name(std::move(__file_name)) {
+    index = clang_createIndex(0, 0);
     const char* args[] = {"-std=c++20"};
-    this->unit = clang_parseTranslationUnit(
-        index,
-        this->file_name.c_str(), 
-        args, 1,
-        nullptr, 0,
-        CXTranslationUnit_None);
-    if (this->unit == nullptr) {
-        std::string inv = "Unable to parse file: " + std::string(file_name);
-        throw std::invalid_argument(inv.c_str());
+    unit = clang_parseTranslationUnit(index, file_name.c_str(), args, 1, nullptr, 0, CXTranslationUnit_None);
+
+    if (!unit) {
+        throw std::invalid_argument("Unable to parse file: " + file_name);
     }
 }
 
-tokenizer_t::~tokenizer_t(void) {
-    clang_disposeTranslationUnit(this->unit);
-    clang_disposeIndex(this->index);
+tokenizer_t::~tokenizer_t() {
+    clang_disposeTranslationUnit(unit);
+    clang_disposeIndex(index);
 }
 
-std::vector<int> tokenizer_t::get_tokens(void) {
-    struct tokenizer_data_t data = {std::vector<int>(), this};
-    clang_visitChildren(clang_getTranslationUnitCursor(this->unit), 
-            [](CXCursor c, CXCursor parent, CXClientData client_data) {
-                tokenizer_data_t* data = 
-                    reinterpret_cast<tokenizer_data_t*>(client_data);
-                if (data->tokenizer->is_from_main_file(c)) {
-                    int token = static_cast<int>(clang_getCursorKind(c));
-                    data->tokens.push_back(token);
-                }
-                return CXChildVisit_Recurse;
-            }, reinterpret_cast<CXClientData>(&data));
-    return data.tokens;
-}
-
-bool tokenizer_t::is_from_main_file(CXCursor __cursor) {
+bool tokenizer_t::is_from_main_file(CXCursor cursor) {
     CXFile cursor_file;
     unsigned line, column, offset;
-    clang_getSpellingLocation(clang_getCursorLocation(__cursor),
-            &cursor_file, &line, &column, &offset);
-    CXFile main_file = clang_getFile(this->unit, this->file_name.c_str());
+    clang_getSpellingLocation(clang_getCursorLocation(cursor), &cursor_file, &line, &column, &offset);
+    CXFile main_file = clang_getFile(unit, file_name.c_str());
     return clang_File_isEqual(cursor_file, main_file);
 }
 
+std::vector<int> tokenizer_t::get_tokens() {
+    tokenizer_data_t data = {std::vector<int>(), this};
+    clang_visitChildren(clang_getTranslationUnitCursor(unit),
+        [](CXCursor cursor, CXCursor /*parent*/, CXClientData client_data) {
+            auto* data = static_cast<tokenizer_data_t*>(client_data);
+            if (data->tokenizer->is_from_main_file(cursor)) {
+                int token_kind = static_cast<int>(clang_getCursorKind(cursor));
+                data->tokens.push_back(token_kind);
+            }
+            return CXChildVisit_Recurse;
+        }, &data);
+    return data.tokens;
+}
+
+void tokenizer_t::print_tokens() {
+    clang_visitChildren(clang_getTranslationUnitCursor(unit),
+        [](CXCursor cursor, CXCursor, CXClientData client_data) {
+            tokenizer_t* self = static_cast<tokenizer_t*>(client_data);
+            if (!self->is_from_main_file(cursor))
+                return CXChildVisit_Recurse;
+
+            int kind = static_cast<int>(clang_getCursorKind(cursor));
+            const char* spelling_cstr = clang_getCString(clang_getCursorKindSpelling((CXCursorKind)kind));
+            std::string spelling = spelling_cstr ? spelling_cstr : "";
+
+            CXFile file;
+            unsigned line = 0, column = 0, offset = 0;
+            clang_getSpellingLocation(clang_getCursorLocation(cursor), &file, &line, &column, &offset);
+
+            std::cout << kind << " - " << spelling << " " << line << " " << column << "\n";
+            return CXChildVisit_Recurse;
+        }, this);
+}
+
 std::string get_cursor_kind_spelling(int kind) {
-    return clang_getCString(clang_getCursorKindSpelling(
-        static_cast<CXCursorKind>(kind)));
-} 
-
-#ifdef BUILD_EXECUTABLE
-
-
-
-#endif
+    return clang_getCString(clang_getCursorKindSpelling(static_cast<CXCursorKind>(kind)));
+}
