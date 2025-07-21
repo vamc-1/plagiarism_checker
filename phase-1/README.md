@@ -14,7 +14,7 @@ sudo apt install build-essential llvm-dev libclang-dev
 ----------------------
 2.Compile the plagiarism‑engine objects : 
 
-     g++ -std=c++20     -I/usr/lib/llvm-16/include     -L/usr/lib/llvm-16/lib     tokenizer.cpp plagiarism_checker.cpp p_main.cpp     -o plagiarism_checker     -        lclang     -pthread     -Wl,-rpath,/usr/lib/llvm-16/lib
+     g++ -std=c++20  -I/usr/lib/llvm-16/include -L/usr/lib/llvm-16/lib tokenizer.cpp plagiarism_checker.cpp p_main.cpp -o plagiarism_checker -lclang -pthread -Wl,-rpath,/usr/lib/llvm-16/lib
      
 3.Run a single comparison
 
